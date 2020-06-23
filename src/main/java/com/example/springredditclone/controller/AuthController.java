@@ -1,11 +1,9 @@
 package com.example.springredditclone.controller;
 
-import com.example.springredditclone.dto.AuthenticationResponse;
-import com.example.springredditclone.dto.LoginRequest;
-import com.example.springredditclone.dto.RefreshTokenRequest;
-import com.example.springredditclone.dto.RegisterRequest;
+import com.example.springredditclone.dto.*;
 import com.example.springredditclone.service.AuthService;
 import com.example.springredditclone.service.RefreshTokenService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +20,15 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<ApiResponse> signup(@RequestBody RegisterRequest registerRequest){
         authService.signup(registerRequest);
-        return new ResponseEntity<>("User Registration is successful ", HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse("User Registration is successful"), HttpStatus.OK);
     }
 
     @GetMapping("/accountVerification/{token}")
-    public ResponseEntity<String> verifyAccount(@PathVariable String token) {
+    public ResponseEntity<ApiResponse> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
-        return new ResponseEntity<>("Account Activate successfully ", HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse("Account Activate successfully"), HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -44,9 +42,9 @@ public class AuthController {
     }
 
     @PostMapping("logout")
-    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+    public ResponseEntity<ApiResponse> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(HttpStatus.OK)
-                .body("Refresh Token Deleted Successfully!!");
+                .body(new ApiResponse("Refresh Token Deleted Successfully!!"));
     }
 }
